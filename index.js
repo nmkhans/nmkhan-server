@@ -20,7 +20,13 @@ const server = async () => {
         client.connect();
         const database = client.db('nmkhan');
         const projectCollection = database.collection('projects')
-        console.log("database connected")
+
+        //? get all projects
+        app.get('/projects', async (req, res) => {
+            const cursor = projectCollection.find({});
+            const result = await cursor.toArray();
+            res.send(result)
+        })
     }
 
     finally {
