@@ -23,18 +23,32 @@ const server = async () => {
 
         //? get all projects
         app.get('/projects', async (req, res) => {
-            const cursor = projectCollection.find({});
-            const result = await cursor.toArray();
-            res.send(result)
+            const type = req.query;
+            if (Object.keys(type).length) {
+                if (type.type === "All") {
+                    const cursor = projectCollection.find({});
+                    const result = await cursor.toArray();
+                    res.send(result)
+                } else {
+                    const query = { type: type.type };
+                    const cursor = projectCollection.find(query);
+                    const result = await cursor.toArray();
+                    res.send(result)
+                }
+            } else {
+                const cursor = projectCollection.find({});
+                const result = await cursor.toArray();
+                res.send(result)
+            }
         })
 
         //? get a single project
         app.get('/project/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const result = await projectCollection.findOne(query);
             res.send(result);
-        } )
+        })
     }
 
     finally {
